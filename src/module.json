@@ -1,0 +1,28 @@
+{
+  "name": "item-grab-bag",
+  "title": "Item Grab Bag",
+  "description": "",
+  "version": "0.0.1",
+  "author": "bojjenclon",
+  "authors": [
+    {
+      "name": "",
+      "email": "",
+      "url": ""
+    }
+  ],
+  "scripts": [],
+  "esmodules": ["item-grab-bag.js"],
+  "styles": ["item-grab-bag.css"],
+  "packs": [],
+  "languages": [],
+  "minimumCoreVersion": "0.5.0",
+  "compatibleCoreVersion": "0.6.6",
+  "url": "",
+  "manifest": "",
+  "download": "",
+  "license": "",
+  "readme": "",
+  "bugs": "",
+  "changelog": ""
+}
