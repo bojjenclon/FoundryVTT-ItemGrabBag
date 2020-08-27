@@ -1,8 +1,8 @@
 <form class="grab-bag-window">
   <div class="bag-content">
     {{#each items as | item |}}
-      <div class="item" data-item-id="{{item._id}}" data-bag-idx="{{@index}}">
-        <div class="name">{{item.name}}</div>
+      <div class="item" data-item-id="{{item.id}}" {{#if item.actor}}data-actor-id="{{item.actor.id}}"{{/if}} data-bag-idx="{{@index}}">
+        <div class="name">{{item.data.name}}</div>
 
         {{#if ../isGM}}
         <div class="btn-remove">{{localize "GRABBAG.button.remove"}}</div>

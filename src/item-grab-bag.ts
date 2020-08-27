@@ -51,21 +51,43 @@ Hooks.once('ready', function() {
         break;
 
       case SocketMessageType.addItemToBag:
-        const item = game.items.get(data.itemId);
-
-        grabBagItems.push(item);
+        grabBagItems.push(data);
         await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
 
         break;
       
       case SocketMessageType.removeItemFromBag:
+        const removedItem = grabBagItems[data.index];
         grabBagItems.splice(data.index, 1);
+
+        if (removedItem.remove) {
+          if (removedItem.actorId && game.user.character.id === removedItem.actorId) {
+            const { character } = game.user;
+            character.items.delete(removedItem.itemId);
+          } else {
+            game.items.delete(removedItem.itemId);
+          }
+        }
+
         await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
 
         break;
       
       case SocketMessageType.itemPickedUp:
+        const pickedUpItem = grabBagItems[data.index];
         grabBagItems.splice(data.index, 1);
+
+        if (pickedUpItem.remove) {
+          // If an item owned by this user is picked up by someone else,
+          // remove it from their inventory
+          if (pickedUpItem.actorId && game.user.character.id === pickedUpItem.actorId) {
+            const { character } = game.user;
+            character.items.delete(pickedUpItem.itemId);
+          } else {
+            game.items.delete(pickedUpItem.itemId);
+          }
+        }
+
         await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
 
         break;
