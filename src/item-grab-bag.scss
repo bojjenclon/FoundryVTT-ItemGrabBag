@@ -2,3 +2,44 @@
   flex: 0;
   padding: 1px 4px;
 }
+
+.grab-bag-window {
+  display: flex;
+
+  .bag-content {
+    flex: 1;
+
+    .item {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+
+      margin: 4px 2px;
+
+      .name {
+        flex: 1;
+
+        font-weight: bold;
+        font-size: 1.2em;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        cursor: pointer;
+      }
+
+      .btn-take,
+      .btn-remove {
+        flex: 0;
+
+        color: black;
+        background: rgba(255, 255, 240, 0.8);
+        border: 1px solid #b5b3a4;
+        border-radius: 3px;
+        padding: 2px 6px;
+
+        cursor: pointer;
+      }
+    }
+  }
+}

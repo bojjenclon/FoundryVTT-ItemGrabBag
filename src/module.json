@@ -15,7 +15,13 @@
   "esmodules": ["item-grab-bag.js"],
   "styles": ["item-grab-bag.css"],
   "packs": [],
-  "languages": [],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
   "minimumCoreVersion": "0.5.0",
   "compatibleCoreVersion": "0.6.6",
   "url": "",

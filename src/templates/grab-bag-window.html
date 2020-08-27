@@ -1,7 +1,15 @@
-<div>
-  <ul>
+<form class="grab-bag-window">
+  <div class="bag-content">
     {{#each items as | item |}}
-      <li>{{item.name}}</li>
+      <div class="item" data-item-id="{{item._id}}" data-bag-idx="{{@index}}">
+        <div class="name">{{item.name}}</div>
+
+        {{#if ../isGM}}
+        <div class="btn-remove">{{localize "GRABBAG.button.remove"}}</div>
+        {{else}}
+        <div class="btn-take">{{localize "GRABBAG.button.take"}}</div>
+        {{/if}}
+      </div>
     {{/each}}
-  </ul>
-</div>
+  </div>
+</form>

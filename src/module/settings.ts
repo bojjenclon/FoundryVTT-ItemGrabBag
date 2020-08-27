@@ -1,3 +1,8 @@
 export const registerSettings = function() {
-	// Register any custom module settings here
+	game.settings.register('item-grab-bag', 'bag-contents', {
+		scope: 'client',
+		config: false,
+		type: Object,
+		default: []
+	});
 }
