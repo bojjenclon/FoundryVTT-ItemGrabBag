@@ -35,7 +35,6 @@ Hooks.once('setup', function() {
 /* ------------------------------------ */
 Hooks.once('ready', function() {
 	const { socket } = game;
-	// @ts-ignore
   socket.on('module.item-grab-bag', async msg => {
 		const { type, data } = msg;
 		const grabBagItems = game.settings.get('item-grab-bag', 'bag-contents');

@@ -62,7 +62,6 @@ export default class GrabBagWindow extends Application {
         const itemIdx = evt.currentTarget.parentElement.dataset.bagIdx;
 
         if (itemIdx) {
-          // @ts-ignore
           game.socket.emit('module.item-grab-bag', {
             type: SocketMessageType.removeItemFromBag,
             data: {
@@ -85,7 +84,6 @@ export default class GrabBagWindow extends Application {
         const itemIdx = evt.currentTarget.parentElement.dataset.bagIdx;
 
         if (itemIdx) {
-          // @ts-ignore
           game.socket.emit('module.item-grab-bag', {
             type: SocketMessageType.removeItemFromBag,
             data: {
@@ -132,7 +130,6 @@ export default class GrabBagWindow extends Application {
             const item = game.items.get(data.id);
             grabBagItems.push(item.data);
 
-            // @ts-ignore
             game.socket.emit('module.item-grab-bag', {
               type: SocketMessageType.addItemToBag,
               data: {
