@@ -1,7 +1,7 @@
 {
   "name": "item-grab-bag",
   "title": "Item Grab Bag",
-  "description": "",
+  "description": "Provides a simple interface to share items across users.",
   "version": "0.0.1",
   "author": "bojjenclon",
   "authors": [
