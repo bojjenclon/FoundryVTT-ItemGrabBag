@@ -2,24 +2,24 @@ import { SocketMessageType } from "./socket-message-type";
 
 export default class GrabBagWindow extends Application {
   static get defaultOptions(): ApplicationOptions {
-		return mergeObject(super.defaultOptions, {
+    return mergeObject(super.defaultOptions, {
       template: 'modules/item-grab-bag/templates/grab-bag-window.html',
-      
+
       id: 'item-grab-bag-window',
       classes: ['item-grab-bag', 'bag-window'],
       title: 'Item Grab Bag',
 
       width: 300,
       height: 450,
-			minimizable: true,
+      minimizable: true,
       resizable: true
-		});
+    });
   }
 
   constructor() {
     super();
   }
-  
+
   getData() {
     const itemData = game.settings.get('item-grab-bag', 'bag-contents');
     const items = [];
@@ -87,14 +87,14 @@ export default class GrabBagWindow extends Application {
     });
 
     if (game.user.isGM) {
-      html.find('.btn-remove').click(async evt => {
+      html.find('.btn-remove').on('click', async evt => {
         evt.preventDefault();
 
         const itemIdx = evt.currentTarget.parentElement.dataset.bagIdx;
         await this._removeFromBag(parseInt(itemIdx, 10));
       });
     } else {
-      html.find('.btn-take').click(async evt => {
+      html.find('.btn-take').on('click', async evt => {
         evt.preventDefault();
 
         const itemIdx = evt.currentTarget.parentElement.dataset.bagIdx;
@@ -172,7 +172,7 @@ export default class GrabBagWindow extends Application {
       this.render(true);
     }
   }
-  
+
   _canDragDrop(selector: string): boolean {
     console.log(selector);
 
@@ -204,7 +204,7 @@ export default class GrabBagWindow extends Application {
               actorId: null,
               itemId: null,
             };
-            let socketData  = {
+            let socketData = {
               actorId: null,
               itemId: null,
               remove: false
@@ -239,7 +239,7 @@ export default class GrabBagWindow extends Application {
               type: SocketMessageType.addItemToBag,
               data: socketData
             });
-            
+
             if (i === numItems - 1) {
               generatingItems = false;
             }
@@ -247,7 +247,7 @@ export default class GrabBagWindow extends Application {
         }
       }
     }
-    
+
     // Wait for items to be done processing
     const interval = setInterval(async () => {
       if (generatingItems) {
