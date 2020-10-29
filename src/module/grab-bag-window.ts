@@ -144,7 +144,9 @@ export default class GrabBagWindow extends Application {
 
       await removeFromBag(itemIdx);
 
-      GrabBagWindow.openDialog();
+      setTimeout(() => {
+        GrabBagWindow.openDialog();
+      }, 0);
 
       game.socket.emit('module.item-grab-bag', {
         type: SocketMessageType.itemPickedUp,
@@ -159,7 +161,9 @@ export default class GrabBagWindow extends Application {
     if (!isNaN(itemIdx)) {
       await pickUpItem(itemIdx);
 
-      GrabBagWindow.openDialog();
+      setTimeout(() => {
+        GrabBagWindow.openDialog();
+      }, 0);
 
       game.socket.emit('module.item-grab-bag', {
         type: SocketMessageType.itemPickedUp,
@@ -189,6 +193,8 @@ export default class GrabBagWindow extends Application {
             const data = JSON.parse(str);
 
             await addItemToBag(data);
+
+            GrabBagWindow.openDialog();
           });
         }
       }
