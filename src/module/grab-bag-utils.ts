@@ -28,7 +28,7 @@ export async function addItemToBag(data) {
     }
 
     const folderId = game.settings.get('item-grab-bag', 'folder-id');
-    const item = await Item.create(mergeObject(duplicate(origItem.data), { permission: CONST.ENTITY_PERMISSIONS.LIMITED, folder: folderId }));
+    const item = await Item.create(mergeObject(duplicate(origItem.data), { permission: CONST.ENTITY_PERMISSIONS.OBSERVER, folder: folderId }));
     grabBagItems.push(item.id);
 
     await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
@@ -132,4 +132,11 @@ export async function pickUpItem(itemIdx: number) {
         .replace('##ITEM##', item.name)
     });
   }
+
+  game.socket.emit('module.item-grab-bag', {
+    type: SocketMessageType.itemPickedUp,
+    data: {
+      itemId: pickedUpItem
+    }
+  });
 }
