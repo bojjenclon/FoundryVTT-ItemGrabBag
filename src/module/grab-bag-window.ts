@@ -12,6 +12,10 @@ export default class GrabBagWindow extends Application {
       classes: ['item-grab-bag', 'bag-window'],
       title: 'Item Grab Bag',
 
+      dragDrop: [{
+        dropSelector: '.bag-content'
+      }],
+
       width: 300,
       height: 450,
       minimizable: true,
@@ -49,17 +53,6 @@ export default class GrabBagWindow extends Application {
 
   activateListeners(html: JQuery) {
     super.activateListeners(html);
-
-    // @ts-ignore
-    const drag = new DragDrop({
-      dropSelector: '.bag-content',
-
-      callbacks: {
-        drop: this._onDragDrop.bind(this)
-      }
-    });
-    // @ts-ignore
-    drag.bind(html[0]);
 
     html.find('.item .name').on('click', async (evt) => {
       evt.preventDefault();
@@ -105,28 +98,7 @@ export default class GrabBagWindow extends Application {
   }
 
   async _removeFromBag(itemIdx: number) {
-    const { user } = game;
-
     if (!isNaN(itemIdx)) {
-      // if (user.isGM) {
-      //   const grabBagItems = game.settings.get('item-grab-bag', 'bag-contents');
-      //   grabBagItems.splice(itemIdx, 1);
-      //   await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
-
-      //   game.socket.emit('module.item-grab-bag', {
-      //     type: SocketMessageType.pushSync
-      //   });
-
-      //   GrabBagWindow.openDialog();
-      // } else {
-      //   game.socket.emit('module.item-grab-bag', {
-      //     type: SocketMessageType.removeItemFromBag,
-      //     data: {
-      //       index: itemIdx
-      //     }
-      //   });
-      // }
-
       await removeFromBag(itemIdx);
 
       setTimeout(() => {
@@ -134,7 +106,7 @@ export default class GrabBagWindow extends Application {
       }, 0);
 
       game.socket.emit('module.item-grab-bag', {
-        type: SocketMessageType.itemPickedUp,
+        type: SocketMessageType.removeItemFromBag,
         data: {
           index: itemIdx
         }

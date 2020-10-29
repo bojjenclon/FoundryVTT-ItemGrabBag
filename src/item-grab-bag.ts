@@ -44,7 +44,7 @@ Hooks.once('ready', async function () {
       name: 'Grab Bag Items',
       parent: null,
       type: 'Item',
-      permission: CONST.ENTITY_PERMISSIONS.LIMITED
+      permission: CONST.ENTITY_PERMISSIONS.OBSERVER
     });
 
     await game.settings.set('item-grab-bag', 'folder-id', folder.id);
