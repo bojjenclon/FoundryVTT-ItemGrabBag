@@ -137,7 +137,7 @@ export default class GrabBagWindow extends Application {
     return true;
   }
 
-  async _onDragDrop(evt: DragEvent) {
+  async _onDrop(evt: DragEvent) {
     const { dataTransfer } = evt;
     const { items } = dataTransfer;
 
