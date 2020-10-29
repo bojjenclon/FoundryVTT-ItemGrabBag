@@ -81,14 +81,16 @@ export async function removeFromBag(itemIdx: number) {
 
   if (isFirstGM()) {
     const item = game.items.get(removedItem);
-    await item.delete();
+    if (item) {
+      await item.delete();
 
-    grabBagItems.splice(itemIdx, 1);
-    await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
+      grabBagItems.splice(itemIdx, 1);
+      await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
 
-    game.socket.emit('module.item-grab-bag', {
-      type: SocketMessageType.pushSync
-    });
+      game.socket.emit('module.item-grab-bag', {
+        type: SocketMessageType.pushSync
+      });
+    }
 
     return;
   }
@@ -108,14 +110,16 @@ export async function pickUpItem(itemIdx: number) {
   const item = game.items.get(pickedUpItem);
 
   if (isFirstGM()) {
-    await item.delete();
+    if (item) {
+      await item.delete();
 
-    grabBagItems.splice(itemIdx, 1);
-    await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
+      grabBagItems.splice(itemIdx, 1);
+      await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
 
-    game.socket.emit('module.item-grab-bag', {
-      type: SocketMessageType.pushSync
-    });
+      game.socket.emit('module.item-grab-bag', {
+        type: SocketMessageType.pushSync
+      });
+    }
 
     return;
   }
