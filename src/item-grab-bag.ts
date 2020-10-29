@@ -4,6 +4,8 @@ import { preloadTemplates } from './module/preload-templates.js';
 
 import GrabBagWindow from './module/grab-bag-window.js';
 import { RegisterSockets } from './module/sockets.js';
+import { GrabBag } from './module/config.js';
+import { isFirstGM } from './module/grab-bag-utils.js';
 
 /* ------------------------------------ */
 /* Initialize module					          */
@@ -33,8 +35,20 @@ Hooks.once('setup', function () {
 /* ------------------------------------ */
 /* When ready							              */
 /* ------------------------------------ */
-Hooks.once('ready', function () {
+Hooks.once('ready', async function () {
   const { socket } = game;
+
+  const folderId = game.settings.get('item-grab-bag', 'folder-id');
+  if (!game.folders.has(folderId) && isFirstGM()) {
+    const folder = await Folder.create({
+      name: 'Grab Bag Items',
+      parent: null,
+      type: 'Item',
+      permission: CONST.ENTITY_PERMISSIONS.LIMITED
+    });
+
+    await game.settings.set('item-grab-bag', 'folder-id', folder.id);
+  }
 
   socket.on('module.item-grab-bag', RegisterSockets);
 });

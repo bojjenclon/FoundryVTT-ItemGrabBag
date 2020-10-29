@@ -5,4 +5,11 @@ export const registerSettings = function () {
 		type: Object,
 		default: []
 	});
+
+	game.settings.register('item-grab-bag', 'folder-id', {
+		scope: 'world',
+		config: false,
+		type: String,
+		default: null
+	});
 }

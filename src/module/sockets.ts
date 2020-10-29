@@ -1,4 +1,5 @@
-import { pickUpItem, removeFromBag } from "./grab-bag-utils";
+import { GrabBag } from "./config";
+import { addItemToBag, isFirstGM, pickUpItem, removeFromBag } from "./grab-bag-utils";
 import GrabBagWindow from "./grab-bag-window";
 import { SocketMessageType } from "./socket-message-type";
 
@@ -22,15 +23,7 @@ export async function RegisterSockets(msg) {
       break;
 
     case SocketMessageType.addItemToBag:
-      grabBagItems.push(data);
-
-      if (user.isGM) {
-        await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
-
-        game.socket.emit('module.item-grab-bag', {
-          type: SocketMessageType.pushSync
-        });
-      }
+      addItemToBag(data);
 
       break;
 

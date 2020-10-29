@@ -37,19 +37,7 @@ export default class GrabBagWindow extends Application {
 
   getData() {
     const itemData = game.settings.get('item-grab-bag', 'bag-contents');
-    const items = [];
-
-    itemData.forEach(async data => {
-      const { actorId, itemId } = data;
-      if (actorId) {
-        const actor = game.actors.get(actorId);
-        const item = actor.items.get(itemId);
-        items.push(item);
-      } else {
-        const item = game.items.get(itemId);
-        items.push(item);
-      }
-    });
+    const items = itemData.map((id: string) => game.items.get(id));
 
     const data = {
       isGM: game.user.isGM,
@@ -86,10 +74,7 @@ export default class GrabBagWindow extends Application {
       }
 
       if (item) {
-        item.sheet.render(true, {
-          width: 600,
-          height: 700
-        });
+        item.sheet.render(true);
       } else {
         // The item was likely removed from the game, so
         // remove it from the bag as well
