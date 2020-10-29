@@ -1,4 +1,4 @@
-import { pickUpItem } from "./grab-bag-utils";
+import { pickUpItem, removeFromBag } from "./grab-bag-utils";
 import GrabBagWindow from "./grab-bag-window";
 import { SocketMessageType } from "./socket-message-type";
 
@@ -7,6 +7,8 @@ export async function RegisterSockets(msg) {
 
   const { type, data } = msg;
   const grabBagItems: Array<any> = game.settings.get('item-grab-bag', 'bag-contents');
+
+  const itemIdx = data.index;
 
   switch (type) {
     case SocketMessageType.showWindow:
@@ -33,31 +35,11 @@ export async function RegisterSockets(msg) {
       break;
 
     case SocketMessageType.removeItemFromBag:
-      const removedItem = grabBagItems[data.index];
-      grabBagItems.splice(data.index, 1);
-
-      if (removedItem.remove) {
-        if (removedItem.actorId && game.user.character.id === removedItem.actorId) {
-          const { character } = game.user;
-          character.items.delete(removedItem.itemId);
-        } else {
-          game.items.delete(removedItem.itemId);
-        }
-      }
-
-      if (user.isGM) {
-        await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
-
-        game.socket.emit('module.item-grab-bag', {
-          type: SocketMessageType.pushSync
-        });
-      }
+      removeFromBag(itemIdx);
 
       break;
 
     case SocketMessageType.itemPickedUp:
-      const itemIdx = data.index;
-
       pickUpItem(itemIdx);
 
       break;

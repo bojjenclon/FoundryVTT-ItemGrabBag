@@ -1,4 +1,4 @@
-import { pickUpItem } from "./grab-bag-utils";
+import { addItemToBag, pickUpItem, removeFromBag } from "./grab-bag-utils";
 import { SocketMessageType } from "./socket-message-type";
 
 export default class GrabBagWindow extends Application {
@@ -123,24 +123,35 @@ export default class GrabBagWindow extends Application {
     const { user } = game;
 
     if (!isNaN(itemIdx)) {
-      if (user.isGM) {
-        const grabBagItems = game.settings.get('item-grab-bag', 'bag-contents');
-        grabBagItems.splice(itemIdx, 1);
-        await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
+      // if (user.isGM) {
+      //   const grabBagItems = game.settings.get('item-grab-bag', 'bag-contents');
+      //   grabBagItems.splice(itemIdx, 1);
+      //   await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
 
-        game.socket.emit('module.item-grab-bag', {
-          type: SocketMessageType.pushSync
-        });
+      //   game.socket.emit('module.item-grab-bag', {
+      //     type: SocketMessageType.pushSync
+      //   });
 
-        GrabBagWindow.openDialog();
-      } else {
-        game.socket.emit('module.item-grab-bag', {
-          type: SocketMessageType.removeItemFromBag,
-          data: {
-            index: itemIdx
-          }
-        });
-      }
+      //   GrabBagWindow.openDialog();
+      // } else {
+      //   game.socket.emit('module.item-grab-bag', {
+      //     type: SocketMessageType.removeItemFromBag,
+      //     data: {
+      //       index: itemIdx
+      //     }
+      //   });
+      // }
+
+      removeFromBag(itemIdx);
+
+      GrabBagWindow.openDialog();
+
+      game.socket.emit('module.item-grab-bag', {
+        type: SocketMessageType.itemPickedUp,
+        data: {
+          index: itemIdx
+        }
+      });
     }
   }
 
@@ -166,9 +177,6 @@ export default class GrabBagWindow extends Application {
   }
 
   async _onDragDrop(evt: DragEvent) {
-    const grabBagItems = game.settings.get('item-grab-bag', 'bag-contents');
-
-    const { user } = game;
     const { dataTransfer } = evt;
     const { items } = dataTransfer;
 
@@ -180,58 +188,7 @@ export default class GrabBagWindow extends Application {
           itm.getAsString(async str => {
             const data = JSON.parse(str);
 
-            const type = data.type || data.Type;
-            if (type !== 'Item') {
-              return;
-            }
-
-            let itemData = {
-              actorId: null,
-              itemId: null,
-            };
-            let socketData = {
-              actorId: null,
-              itemId: null,
-              remove: false
-            };
-
-            if (data.pack) {
-              // Support getting items directly from a compendium
-              const item = await game.items.importFromCollection(data.pack, data.id);
-              itemData.itemId = item.id;
-            } else if (data.actorId) {
-              // Item was given up by a player
-              const actor = game.actors.get(data.actorId);
-              const item = actor.getOwnedItem(data.data._id);
-
-              itemData.itemId = item.id;
-              itemData.actorId = actor.id;
-
-              // Remove the item from the player's inventory
-              socketData.remove = true;
-            } else {
-              // Otherwise pull the item from the game's data
-              const item = game.items.get(data.id);
-              itemData.itemId = item.id;
-            }
-
-            grabBagItems.push(itemData);
-
-            socketData.actorId = itemData.actorId;
-            socketData.itemId = itemData.itemId;
-
-            if (user.isGM) {
-              await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
-
-              game.socket.emit('module.item-grab-bag', {
-                type: SocketMessageType.pushSync
-              });
-            } else {
-              game.socket.emit('module.item-grab-bag', {
-                type: SocketMessageType.addItemToBag,
-                data: socketData
-              });
-            }
+            addItemToBag(data);
           });
         }
       }
