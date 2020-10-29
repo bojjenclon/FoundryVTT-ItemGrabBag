@@ -46,7 +46,9 @@ export async function RegisterSockets(msg) {
 
     case SocketMessageType.pushSync:
       // Refresh the window
-      GrabBagWindow.openDialog();
+      setTimeout(() => {
+        GrabBagWindow.openDialog();
+      }, 0);
 
       break;
   }
