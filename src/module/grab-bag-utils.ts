@@ -30,7 +30,14 @@ export async function addItemToBag(data) {
 
     if (origItem) {
       const folderId = game.settings.get('item-grab-bag', 'folder-id');
-      const item = await Item.create(mergeObject(duplicate(origItem.data), { permission: CONST.ENTITY_PERMISSIONS.OBSERVER, folder: folderId }));
+      const dataToMerge = {
+        permission: {
+          default: CONST.ENTITY_PERMISSIONS.OBSERVER
+        },
+
+        folder: folderId
+      };
+      const item = await Item.create(mergeObject(duplicate(origItem.data), dataToMerge));
       grabBagItems.push(item.id);
 
       await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
