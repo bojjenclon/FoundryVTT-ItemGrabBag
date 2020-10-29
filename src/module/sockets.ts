@@ -8,7 +8,7 @@ export async function RegisterSockets(msg) {
   const { type, data } = msg;
   const grabBagItems: Array<any> = game.settings.get('item-grab-bag', 'bag-contents');
 
-  const itemIdx = data.index;
+  const itemIdx = (data || {}).index;
 
   switch (type) {
     case SocketMessageType.showWindow:
