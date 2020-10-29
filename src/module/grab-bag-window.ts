@@ -1,3 +1,4 @@
+import { pickUpItem } from "./grab-bag-utils";
 import { SocketMessageType } from "./socket-message-type";
 
 export default class GrabBagWindow extends Application {
@@ -130,6 +131,8 @@ export default class GrabBagWindow extends Application {
         game.socket.emit('module.item-grab-bag', {
           type: SocketMessageType.pushSync
         });
+
+        GrabBagWindow.openDialog();
       } else {
         game.socket.emit('module.item-grab-bag', {
           type: SocketMessageType.removeItemFromBag,
@@ -143,6 +146,10 @@ export default class GrabBagWindow extends Application {
 
   async _takeFromBag(itemIdx: number) {
     if (!isNaN(itemIdx)) {
+      pickUpItem(itemIdx);
+
+      GrabBagWindow.openDialog();
+
       game.socket.emit('module.item-grab-bag', {
         type: SocketMessageType.itemPickedUp,
         data: {
