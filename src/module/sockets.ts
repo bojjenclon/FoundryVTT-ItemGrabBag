@@ -1,3 +1,4 @@
+import GrabBagWindow from "./grab-bag-window";
 import { SocketMessageType } from "./socket-message-type";
 
 export async function RegisterSockets(msg) {
@@ -67,6 +68,9 @@ export async function RegisterSockets(msg) {
       break;
 
     case SocketMessageType.pushSync:
+      // Refresh the window
+      GrabBagWindow.openDialog();
+
       break;
   }
 }

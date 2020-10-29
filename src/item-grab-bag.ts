@@ -54,10 +54,10 @@ Hooks.on('renderSidebarTab', (_app, html, _data) => {
 
     const bagBtn = $('<div>', {
       class: 'grab-bag-directory-container',
-      title: isGMConnected ? game.i18n.localize('GRABBAG.tooltip.gmConnected') : game.i18n.localize('GRABBAG.tooltip.gmNotConnected'),
+      // title: isGMConnected ? game.i18n.localize('GRABBAG.tooltip.gmConnected') : game.i18n.localize('GRABBAG.tooltip.gmNotConnected'),
 
       html: $('<button>', {
-        disabled: !isGMConnected,
+        // disabled: !isGMConnected,
 
         html: `<i class="fas fa-hands"></i> ${game.i18n.localize('GRABBAG.button.open')}`
       })
@@ -66,8 +66,7 @@ Hooks.on('renderSidebarTab', (_app, html, _data) => {
     bagBtn.on('click', ev => {
       ev.preventDefault();
 
-      const dialog = new GrabBagWindow();
-      dialog.render(true);
+      GrabBagWindow.openDialog();
     });
 
     directoryList.after(bagBtn);

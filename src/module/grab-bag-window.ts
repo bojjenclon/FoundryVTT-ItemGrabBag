@@ -1,6 +1,8 @@
 import { SocketMessageType } from "./socket-message-type";
 
 export default class GrabBagWindow extends Application {
+  private static dialog: GrabBagWindow;
+
   static get defaultOptions(): ApplicationOptions {
     return mergeObject(super.defaultOptions, {
       template: 'modules/item-grab-bag/templates/grab-bag-window.html',
@@ -18,6 +20,18 @@ export default class GrabBagWindow extends Application {
 
   constructor() {
     super();
+  }
+
+  static openDialog() {
+    if (!this.dialog) {
+      this.dialog = new GrabBagWindow();
+    }
+
+    this.dialog.render(true);
+  }
+
+  static closeDialog(): Promise<any> {
+    return this.dialog.close();
   }
 
   getData() {
