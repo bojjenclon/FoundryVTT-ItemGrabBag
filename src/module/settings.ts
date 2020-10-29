@@ -1,6 +1,6 @@
-export const registerSettings = function() {
+export const registerSettings = function () {
 	game.settings.register('item-grab-bag', 'bag-contents', {
-		scope: 'client',
+		scope: 'world',
 		config: false,
 		type: Object,
 		default: []

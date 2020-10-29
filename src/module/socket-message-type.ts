@@ -4,5 +4,7 @@ export const SocketMessageType = {
 
   addItemToBag: 'addItemToBag',
   removeItemFromBag: 'removeItemFromBag',
-  itemPickedUp: 'itemPickedUp'
+  itemPickedUp: 'itemPickedUp',
+
+  pushSync: 'pushSync'
 };

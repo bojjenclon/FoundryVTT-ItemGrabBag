@@ -2,9 +2,9 @@
   "GRABBAG.button.open": "Open Grab Bag",
   "GRABBAG.button.remove": "Remove",
   "GRABBAG.button.take": "Take",
-
+  "GRABBAG.tooltip.gmConnected": "View the bag's content",
+  "GRABBAG.tooltip.gmNotConnected": "The grab bag can only be opened with a GM present",
   "GRABBAG.chat.itemTaken": "##ACTOR## took ##ITEM## from the bag.",
   "GRABBAG.chat.itemTakenBack": "##ACTOR## took their ##ITEM## back from the bag.",
-
   "GRABBAG.warning.invalidItem": "You've selected an invalid item. It was likely removed by the GM before you could claim it."
 }
