@@ -119,13 +119,25 @@ export default class GrabBagWindow extends Application {
   }
 
   async _removeFromBag(itemIdx: number) {
+    const { user } = game;
+
     if (!isNaN(itemIdx)) {
-      game.socket.emit('module.item-grab-bag', {
-        type: SocketMessageType.removeItemFromBag,
-        data: {
-          index: itemIdx
-        }
-      });
+      if (user.isGM) {
+        const grabBagItems = game.settings.get('item-grab-bag', 'bag-contents');
+        grabBagItems.splice(itemIdx, 1);
+        await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
+
+        game.socket.emit('module.item-grab-bag', {
+          type: SocketMessageType.pushSync
+        });
+      } else {
+        game.socket.emit('module.item-grab-bag', {
+          type: SocketMessageType.removeItemFromBag,
+          data: {
+            index: itemIdx
+          }
+        });
+      }
     }
   }
 
@@ -149,6 +161,7 @@ export default class GrabBagWindow extends Application {
   async _onDragDrop(evt: DragEvent) {
     const grabBagItems = game.settings.get('item-grab-bag', 'bag-contents');
 
+    const { user } = game;
     const { dataTransfer } = evt;
     const { items } = dataTransfer;
 
@@ -200,10 +213,18 @@ export default class GrabBagWindow extends Application {
             socketData.actorId = itemData.actorId;
             socketData.itemId = itemData.itemId;
 
-            game.socket.emit('module.item-grab-bag', {
-              type: SocketMessageType.addItemToBag,
-              data: socketData
-            });
+            if (user.isGM) {
+              await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
+
+              game.socket.emit('module.item-grab-bag', {
+                type: SocketMessageType.pushSync
+              });
+            } else {
+              game.socket.emit('module.item-grab-bag', {
+                type: SocketMessageType.addItemToBag,
+                data: socketData
+              });
+            }
           });
         }
       }
