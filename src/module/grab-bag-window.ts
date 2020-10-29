@@ -72,7 +72,7 @@ export default class GrabBagWindow extends Application {
     // @ts-ignore
     drag.bind(html[0]);
 
-    html.find('.item .name').click(async evt => {
+    html.find('.item .name').on('click', async (evt) => {
       evt.preventDefault();
 
       const { actorId, itemId } = evt.currentTarget.parentElement.dataset;
@@ -119,8 +119,6 @@ export default class GrabBagWindow extends Application {
   }
 
   async _removeFromBag(itemIdx: number) {
-    const grabBagItems = game.settings.get('item-grab-bag', 'bag-contents');
-
     if (!isNaN(itemIdx)) {
       game.socket.emit('module.item-grab-bag', {
         type: SocketMessageType.removeItemFromBag,
@@ -128,17 +126,10 @@ export default class GrabBagWindow extends Application {
           index: itemIdx
         }
       });
-
-      grabBagItems.splice(itemIdx, 1);
-      await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
-
-      this.render(true);
     }
   }
 
   async _takeFromBag(itemIdx: number) {
-    const grabBagItems = game.settings.get('item-grab-bag', 'bag-contents');
-
     if (!isNaN(itemIdx)) {
       game.socket.emit('module.item-grab-bag', {
         type: SocketMessageType.itemPickedUp,
@@ -146,44 +137,6 @@ export default class GrabBagWindow extends Application {
           index: itemIdx
         }
       });
-
-      const itemData = grabBagItems[itemIdx];
-      const { actorId, itemId } = itemData;
-
-      grabBagItems.splice(itemIdx, 1);
-      await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
-
-      let item: Item;
-      if (actorId) {
-        const actor = game.actors.get(actorId);
-        item = actor.items.get(itemId);
-      } else {
-        item = game.items.get(itemId);
-      }
-
-      const { character } = game.user;
-
-      if (!item || !character) {
-        return;
-      }
-
-      // User is picking up their own item, not much to do
-      if (actorId === character.id) {
-        await ChatMessage.create({
-          content: game.i18n.localize('GRABBAG.chat.itemTakenBack')
-            .replace('##ACTOR##', character.name)
-            .replace('##ITEM##', item.name)
-        });
-      } else {
-        await character.createEmbeddedEntity('OwnedItem', item.data);
-        await ChatMessage.create({
-          content: game.i18n.localize('GRABBAG.chat.itemTaken')
-            .replace('##ACTOR##', character.name)
-            .replace('##ITEM##', item.name)
-        });
-      }
-
-      this.render(true);
     }
   }
 
@@ -198,8 +151,6 @@ export default class GrabBagWindow extends Application {
 
     const { dataTransfer } = evt;
     const { items } = dataTransfer;
-
-    let generatingItems = true;
 
     if (items) {
       const numItems = items.length;
@@ -253,26 +204,9 @@ export default class GrabBagWindow extends Application {
               type: SocketMessageType.addItemToBag,
               data: socketData
             });
-
-            if (i === numItems - 1) {
-              generatingItems = false;
-            }
           });
         }
       }
     }
-
-    // Wait for items to be done processing
-    const interval = setInterval(async () => {
-      if (generatingItems) {
-        return;
-      }
-
-      clearInterval(interval);
-
-      await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
-
-      this.render(true);
-    }, 10);
   }
 }
