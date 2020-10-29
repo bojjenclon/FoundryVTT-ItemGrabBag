@@ -1,4 +1,5 @@
 import { GrabBag } from "./config";
+import GrabBagWindow from "./grab-bag-window";
 import { SocketMessageType } from "./socket-message-type";
 
 export function isFirstGM(): boolean {
@@ -27,15 +28,19 @@ export async function addItemToBag(data) {
       origItem = game.items.get(data.id);
     }
 
-    const folderId = game.settings.get('item-grab-bag', 'folder-id');
-    const item = await Item.create(mergeObject(duplicate(origItem.data), { permission: CONST.ENTITY_PERMISSIONS.OBSERVER, folder: folderId }));
-    grabBagItems.push(item.id);
+    if (origItem) {
+      const folderId = game.settings.get('item-grab-bag', 'folder-id');
+      const item = await Item.create(mergeObject(duplicate(origItem.data), { permission: CONST.ENTITY_PERMISSIONS.OBSERVER, folder: folderId }));
+      grabBagItems.push(item.id);
 
-    await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
+      await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
 
-    game.socket.emit('module.item-grab-bag', {
-      type: SocketMessageType.pushSync
-    });
+      game.socket.emit('module.item-grab-bag', {
+        type: SocketMessageType.pushSync
+      });
+    }
+
+    GrabBagWindow.openDialog();
 
     return;
   }
@@ -92,6 +97,8 @@ export async function removeFromBag(itemIdx: number) {
       });
     }
 
+    GrabBagWindow.openDialog();
+
     return;
   }
 
@@ -120,6 +127,8 @@ export async function pickUpItem(itemIdx: number) {
         type: SocketMessageType.pushSync
       });
     }
+
+    GrabBagWindow.openDialog();
 
     return;
   }
