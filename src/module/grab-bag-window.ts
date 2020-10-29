@@ -142,7 +142,7 @@ export default class GrabBagWindow extends Application {
       //   });
       // }
 
-      removeFromBag(itemIdx);
+      await removeFromBag(itemIdx);
 
       GrabBagWindow.openDialog();
 
@@ -157,7 +157,7 @@ export default class GrabBagWindow extends Application {
 
   async _takeFromBag(itemIdx: number) {
     if (!isNaN(itemIdx)) {
-      pickUpItem(itemIdx);
+      await pickUpItem(itemIdx);
 
       GrabBagWindow.openDialog();
 
@@ -185,10 +185,10 @@ export default class GrabBagWindow extends Application {
       for (let i = 0; i < numItems; i++) {
         const itm = items[i];
         if (itm.kind === 'string' && itm.type.match('^text/plain')) {
-          itm.getAsString(async str => {
+          itm.getAsString(async (str) => {
             const data = JSON.parse(str);
 
-            addItemToBag(data);
+            await addItemToBag(data);
           });
         }
       }
