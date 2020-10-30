@@ -2,16 +2,8 @@ import GrabBagWindow from "./grab-bag-window";
 import { SocketMessageType } from "./socket-message-type";
 
 export function isGMConnected(): boolean {
-  let isGMConnected = false;
-  const users = game.users.values;
-  for (let i = 0; i < users.length; i++) {
-    const user = users[i];
-    if (user.active && user.isGM) {
-      isGMConnected = true;
-      break;
-    }
-  }
-  return isGMConnected;
+  const gmList = game.users.filter((u: User) => u.active && u.isGM);
+  return gmList.length > 0;
 }
 
 export function isFirstGM(): boolean {
@@ -20,7 +12,7 @@ export function isFirstGM(): boolean {
     return false;
   }
 
-  const gmList = game.users.filter((usr: User) => user.active && usr.isGM);
+  const gmList = game.users.filter((u: User) => u.active && u.isGM);
   const isFirstGM = gmList && gmList[0].id === user.id;
 
   return isFirstGM;
