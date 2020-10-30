@@ -54,7 +54,7 @@ export async function addItemToBag(data) {
     GrabBagWindow.openDialog();
 
     return;
-  } else if (isGMConnected()) {
+  } else if (!isGMConnected()) {
     ui.notifications.warn(game.i18n.localize('GRABBAG.warning.gmDisconnected'));
     return;
   }
@@ -114,7 +114,7 @@ export async function removeFromBag(itemIdx: number) {
     GrabBagWindow.openDialog();
 
     return;
-  } else if (isGMConnected()) {
+  } else if (!isGMConnected()) {
     ui.notifications.warn(game.i18n.localize('GRABBAG.warning.gmDisconnected'));
     return;
   }
@@ -148,7 +148,7 @@ export async function pickUpItem(itemIdx: number) {
     GrabBagWindow.openDialog();
 
     return;
-  } else if (isGMConnected()) {
+  } else if (!isGMConnected()) {
     ui.notifications.warn(game.i18n.localize('GRABBAG.warning.gmDisconnected'));
     return;
   }

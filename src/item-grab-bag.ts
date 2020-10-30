@@ -58,7 +58,12 @@ Hooks.on('renderSidebarTab', (_app, html, _data) => {
   const gmConnected = isGMConnected();
 
   if (html.attr('id') === 'items') {
+    const folderId = game.settings.get('item-grab-bag', 'folder-id');
+
     const directoryList = html.find('ol.directory-list');
+    const bagFolder: JQuery = html.find(`li[data-folder-id="${folderId}"]`);
+
+    bagFolder.addClass('hidden');
 
     const bagBtn = $('<div>', {
       class: 'grab-bag-directory-container',
