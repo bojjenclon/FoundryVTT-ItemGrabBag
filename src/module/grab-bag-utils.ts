@@ -23,7 +23,7 @@ export async function addItemToBag(data) {
       origItem = await game.items.importFromCollection(data.pack, data.id);
     } else if (data.actorId) {
       const actor = game.actors.get(data.actorId);
-      origItem = actor.getOwnedItem(data.data._id);
+      origItem = await actor.deleteOwnedItem(data.data._id);
     } else {
       origItem = game.items.get(data.id);
     }
@@ -71,7 +71,7 @@ export async function addItemToBag(data) {
   } else if (data.actorId) {
     // Item was given up by a player
     const actor = game.actors.get(data.actorId);
-    const item = await actor.deleteOwnedItem(data.data._id);
+    const item = actor.getOwnedItem(data.data._id);
 
     socketData.itemId = item.id;
     socketData.actorId = actor.id;
