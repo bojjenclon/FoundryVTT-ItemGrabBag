@@ -22,26 +22,29 @@ export async function addItemToBag(data) {
   if (isFirstGM()) {
     const grabBagItems = game.settings.get('item-grab-bag', 'bag-contents');
 
-    let origItem;
+    let origItem: Item;
+    const itemId = getProperty(data, 'id') || getProperty(data, 'data._id');
     if (data.packId) {
-      origItem = await game.items.importFromCollection(data.pack, data.id);
+      origItem = await game.items.importFromCollection(data.pack, itemId);
     } else if (data.actorId) {
       const actor = game.actors.get(data.actorId);
-      origItem = await actor.deleteOwnedItem(data.id);
+      origItem = await actor.deleteOwnedItem(itemId);
     } else {
-      origItem = game.items.get(data.id);
+      origItem = game.items.get(itemId);
     }
 
     if (origItem) {
       const folderId = game.settings.get('item-grab-bag', 'folder-id');
-      const dataToMerge = {
+      const dataToMerge: any = {
         permission: {
           default: CONST.ENTITY_PERMISSIONS.OBSERVER
         },
 
         folder: folderId
       };
-      const item = await Item.create(mergeObject(duplicate(origItem.data), dataToMerge));
+
+      const dupData = duplicate(origItem.name ? origItem : origItem.data);
+      const item = await Item.create(mergeObject(dupData, dataToMerge));
       grabBagItems.push(item.id);
 
       await game.settings.set('item-grab-bag', 'bag-contents', grabBagItems);
