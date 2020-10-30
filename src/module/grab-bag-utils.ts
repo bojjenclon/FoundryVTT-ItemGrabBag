@@ -71,7 +71,7 @@ export async function addItemToBag(data) {
   } else if (data.actorId) {
     // Item was given up by a player
     const actor = game.actors.get(data.actorId);
-    const item = actor.getOwnedItem(data.data._id);
+    const item = await actor.deleteOwnedItem(data.data._id);
 
     socketData.itemId = item.id;
     socketData.actorId = actor.id;
