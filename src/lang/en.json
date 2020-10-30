@@ -6,5 +6,6 @@
   "GRABBAG.tooltip.gmNotConnected": "The grab bag can only be opened with a GM present",
   "GRABBAG.chat.itemTaken": "##ACTOR## took ##ITEM## from the bag.",
   "GRABBAG.chat.itemTakenBack": "##ACTOR## took their ##ITEM## back from the bag.",
+  "GRABBAG.warning.gmDisconnected": "A GM must be connected to use Item Grab Bag",
   "GRABBAG.warning.invalidItem": "You've selected an invalid item. It was likely removed by the GM before you could claim it."
 }

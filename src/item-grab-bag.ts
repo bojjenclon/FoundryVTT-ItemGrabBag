@@ -4,8 +4,7 @@ import { preloadTemplates } from './module/preload-templates.js';
 
 import GrabBagWindow from './module/grab-bag-window.js';
 import { RegisterSockets } from './module/sockets.js';
-import { GrabBag } from './module/config.js';
-import { isFirstGM } from './module/grab-bag-utils.js';
+import { isFirstGM, isGMConnected } from './module/grab-bag-utils.js';
 
 /* ------------------------------------ */
 /* Initialize module					          */
@@ -56,22 +55,17 @@ Hooks.once('ready', async function () {
 Hooks.on('renderSidebarTab', (_app, html, _data) => {
   // Only enable the button if a GM is currently connected,
   // since only a GM can set the global config.
-  let isGMConnected = false;
-  game.users.forEach((user: User) => {
-    if (user.active && user.isGM) {
-      isGMConnected = true;
-    }
-  });
+  const gmConnected = isGMConnected();
 
   if (html.attr('id') === 'items') {
     const directoryList = html.find('ol.directory-list');
 
     const bagBtn = $('<div>', {
       class: 'grab-bag-directory-container',
-      title: isGMConnected ? game.i18n.localize('GRABBAG.tooltip.gmConnected') : game.i18n.localize('GRABBAG.tooltip.gmNotConnected'),
+      title: gmConnected ? game.i18n.localize('GRABBAG.tooltip.gmConnected') : game.i18n.localize('GRABBAG.tooltip.gmNotConnected'),
 
       html: $('<button>', {
-        disabled: !isGMConnected,
+        disabled: !gmConnected,
 
         html: `<i class="fas fa-hands"></i> ${game.i18n.localize('GRABBAG.button.open')}`
       })

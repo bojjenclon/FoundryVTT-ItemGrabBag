@@ -1,6 +1,18 @@
-import { GrabBag } from "./config";
 import GrabBagWindow from "./grab-bag-window";
 import { SocketMessageType } from "./socket-message-type";
+
+export function isGMConnected(): boolean {
+  let isGMConnected = false;
+  const users = game.users.values;
+  for (let i = 0; i < users.length; i++) {
+    const user = users[i];
+    if (user.active && user.isGM) {
+      isGMConnected = true;
+      break;
+    }
+  }
+  return isGMConnected;
+}
 
 export function isFirstGM(): boolean {
   const { user } = game;
@@ -23,7 +35,7 @@ export async function addItemToBag(data) {
       origItem = await game.items.importFromCollection(data.pack, data.id);
     } else if (data.actorId) {
       const actor = game.actors.get(data.actorId);
-      origItem = await actor.deleteOwnedItem(data.data._id);
+      origItem = await actor.deleteOwnedItem(data.id);
     } else {
       origItem = game.items.get(data.id);
     }
@@ -49,6 +61,9 @@ export async function addItemToBag(data) {
 
     GrabBagWindow.openDialog();
 
+    return;
+  } else if (isGMConnected()) {
+    ui.notifications.warn(game.i18n.localize('GRABBAG.warning.gmDisconnected'));
     return;
   }
 
@@ -107,6 +122,9 @@ export async function removeFromBag(itemIdx: number) {
     GrabBagWindow.openDialog();
 
     return;
+  } else if (isGMConnected()) {
+    ui.notifications.warn(game.i18n.localize('GRABBAG.warning.gmDisconnected'));
+    return;
   }
 
   game.socket.emit('module.item-grab-bag', {
@@ -137,6 +155,9 @@ export async function pickUpItem(itemIdx: number) {
 
     GrabBagWindow.openDialog();
 
+    return;
+  } else if (isGMConnected()) {
+    ui.notifications.warn(game.i18n.localize('GRABBAG.warning.gmDisconnected'));
     return;
   }
 
